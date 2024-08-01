@@ -25,7 +25,18 @@ dependencies {
 }
 
 group = "com.panaxeo"
-version = "0.1.0"
+version = "0.1.1"
+
+gradlePlugin {
+    // Define the plugin
+    val shadowAarPlugin by plugins.creating {
+        id = "com.panaxeo.shadow-aar"
+        implementationClass = "com.panaxeo.shadowplugin.ShadowAarPlugin"
+        isAutomatedPublishing = true
+    }
+}
+
+// Publish part
 
 ext["signing.keyId"] = System.getenv("SHADOW_AAR_SIGNING_KEY_ID")
 ext["signing.password"] = System.getenv("SHADOW_AAR_SIGNING_PASSWORD")
@@ -36,7 +47,7 @@ ext["sonatypePassword"] = System.getenv("SHADOW_AAR_REPO_PASSWORD")
 // Maven Bug, maven-publish ignores custom repository and default is used anyway
 val localMavenRepo = project.repositories.mavenLocal().url
 
-val dokkaOutputDir = "${layout.buildDirectory}/dokka"
+val dokkaOutputDir = "${layout.buildDirectory.get().asFile.absolutePath}/dokka"
 tasks.dokkaHtml {
     outputDirectory.set(file(dokkaOutputDir))
 }
